@@ -34,7 +34,7 @@ luego *Modules → Spare parts* para agregar los componentes.
 2. Con `switch(sec)` ejecuta **un ciclo completo** de la secuencia elegida. Como `sec` se queda guardado,
    la secuencia se repite hasta que se pulse otro botón. Al inicio `sec = 0`, así que no pasa nada.
 3. Los botones solo se leen **entre** ciclos, porque las secuencias usan `delay()`. Por eso hay que mantener
-   el botón presionado hasta que termine el ciclo en curso (hasta unos 2,1 s en `secx2`).
+   el botón presionado hasta que termine el ciclo en curso (hasta unos 2,25 s en `secx2`).
 
 **Secuencias** (`tiempo` = 150 ms)
 | Botón | Función | Efecto |
