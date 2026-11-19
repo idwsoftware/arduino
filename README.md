@@ -1,8 +1,13 @@
 # Examen Unidad II – Arquitectura de Computadoras (2026-II)
 
 Resolución de las 3 preguntas con Arduino Uno, para simular en **PICSimLab**.
-Cada carpeta tiene el sketch `.ino` (se abre en el IDE de Arduino) y el `.hex` ya compilado
-(en PICSimLab: *File → Load Hex*).
+Cada carpeta tiene:
+- el sketch `.ino` (se abre en el IDE de Arduino),
+- el `.hex` ya compilado (en PICSimLab: *File → Load Hex*),
+- el workspace `.pzw` de PICSimLab con la placa, el programa y los componentes ya conectados
+  (en PICSimLab: *File → Load Workspace*).
+
+📘 **Guía paso a paso con animaciones:** [GUIA_PICSIMLAB.md](GUIA_PICSIMLAB.md)
 
 | Carpeta | Pregunta |
 |---|---|
@@ -10,9 +15,9 @@ Cada carpeta tiene el sketch `.ino` (se abre en el IDE de Arduino) y el `.hex` y
 | `Pregunta2_Direccional_Bicicleta/` | 2. Direccional de bicicleta con cancelación automática y modo nocturno |
 | `Pregunta3_Nivel_Tanque/` | 3. Nivel de un tanque con HC-SR04, LCD, buzzer, LED y servo |
 
-> **Archivo workspace de PICSimLab (`.pzw`):** se genera desde la interfaz gráfica de PICSimLab
-> (*File → Save Workspace*) después de armar el circuito con las conexiones de abajo.
-> No se puede generar de forma fiable sin ejecutar PICSimLab.
+> **Sobre los `.pzw`:** se generaron con `herramientas/generar_workspaces.py`, siguiendo el formato del
+> código fuente de PICSimLab 0.9.x. No se abrieron en PICSimLab. Si tu versión no los abre bien,
+> arma el circuito con las tablas de abajo y guárdalo con *File → Save Workspace*.
 
 Configuración común en PICSimLab: *Board* = **Arduino Uno**, *Microcontroller* = **atmega328p**,
 luego *Modules → Spare parts* para agregar los componentes.
@@ -62,7 +67,7 @@ luego *Modules → Spare parts* para agregar los componentes.
 | *Push buttons* – botón DERECHA | 10 (activo en bajo, `INPUT_PULLUP`) |
 | *Push buttons* – botón IZQUIERDA | 11 (activo en bajo, `INPUT_PULLUP`) |
 | *Potentiometers* – posición del timón | A0 (centro ≈ 512) |
-| *LDR* (o un segundo potenciómetro que haga de sensor de luz) | A1 (valor bajo = oscuro) |
+| *LDR* (salida `3 - A0` del módulo) | A1 (valor **alto** = oscuro) |
 
 **Lógica**
 - Al pulsar **DERECHA** se enciende una luz que corre de izquierda a derecha (flecha →), como en las imágenes
@@ -70,7 +75,7 @@ luego *Modules → Spare parts* para agregar los componentes.
 - **Cancelación automática:** el potenciómetro representa el timón. Después de activar la direccional,
   el programa espera a que el timón **gire** (se aleje más de 200 del centro) y luego **vuelva al centro**
   (±80). En ese momento la direccional se apaga sola, como en un auto.
-- **Oscuridad:** si el LDR marca oscuro (< 300, con histéresis) y no hay direccional activa, los 8 LEDs
+- **Oscuridad:** si el LDR marca oscuro (> 600, con histéresis) y no hay direccional activa, los 8 LEDs
   **parpadean** cada 400 ms. Si hay una direccional activa de noche, la flecha se muestra con "cola"
   (2 LEDs) para que se vea mejor.
 - Todo usa `millis()` (sin `delay`), así los botones y el timón se leen siempre.
@@ -104,7 +109,7 @@ h=2.73m ALARMA
 |---|---|
 | *LCD hd44780* 16x2 | RS=12, EN=11, D4=5, D5=4, D6=3, D7=2 |
 | *Ultrasonic HC-SR04* | TRIG=7, ECHO=8 |
-| *Buzzer* | 6 |
+| *Buzzer* (Type: **Tone**, porque se usa `tone()`) | 6 |
 | *LEDs* (LED de alarma) | 13 |
 | *Servo motor* | 9 |
 
@@ -112,6 +117,13 @@ En PICSimLab, mueve la distancia del HC-SR04: **30 cm o menos** (nivel ≥ 2,70 
 **45 cm o más** (nivel ≤ 2,55 m) la apaga.
 
 ---
+
+## Otras carpetas
+
+| Carpeta | Contenido |
+|---|---|
+| `animaciones/` | GIF del flujo paso a paso, simulaciones del comportamiento esperado y tablas de conexiones (PNG) |
+| `herramientas/` | Scripts de Python que generan los `.pzw` y las animaciones |
 
 ## Compilación
 

@@ -7,7 +7,8 @@
  *   - Pulsador DERECHA               -> pin 10 (INPUT_PULLUP, activo en LOW)
  *   - Pulsador IZQUIERDA             -> pin 11 (INPUT_PULLUP, activo en LOW)
  *   - Potenciometro (timon)          -> A0  (centro ~512)
- *   - LDR (sensor de luz, divisor)   -> A1  (valor bajo = oscuro)
+ *   - LDR (modulo sensor de luz)     -> A1  (valor ALTO = oscuro: la
+ *                                          resistencia del LDR sube con poca luz)
  *
  * Funcionamiento:
  *   - Al pulsar DERECHA se activa la secuencia de flecha hacia la derecha
@@ -32,7 +33,7 @@ const int pinLDR   = A1;
 const int CENTRO        = 512;  // lectura del potenciometro en el centro
 const int ZONA_CENTRO   = 80;   // +- banda considerada "centro"
 const int GIRO_MIN      = 200;  // desviacion para considerar que el timon giro
-const int UMBRAL_OSCURO = 300;  // LDR por debajo de esto = oscuro
+const int UMBRAL_OSCURO = 600;  // LDR por encima de esto = oscuro (~15 lux)
 const int HISTERESIS    = 40;   // evita parpadeos en el limite luz/oscuridad
 
 const unsigned long T_PASO      = 120;  // ms por paso de la flecha
@@ -118,8 +119,8 @@ void vigilarTimon() {
 
 void leerLuz() {
   int luz = analogRead(pinLDR);
-  if (!oscuro && luz < UMBRAL_OSCURO) oscuro = true;
-  else if (oscuro && luz > UMBRAL_OSCURO + HISTERESIS) oscuro = false;
+  if (!oscuro && luz > UMBRAL_OSCURO) oscuro = true;
+  else if (oscuro && luz < UMBRAL_OSCURO - HISTERESIS) oscuro = false;
 }
 
 // Flecha: la luz corre hacia el lado indicado; tras llegar al extremo
